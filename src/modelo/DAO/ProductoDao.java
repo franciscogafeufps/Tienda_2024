@@ -25,24 +25,27 @@ public class ProductoDao {
     }
     
     public void guardar(Producto producto) {
+    PreparedStatement consulta = null;
+    try {
+        consulta = conexion.prepareStatement("INSERT INTO producto (nombre, descripcion, precio, proveedor_id) VALUES (?, ?, ?, ?)");
+        consulta.setString(1, producto.getNombre());
+        consulta.setString(2, producto.getDescripcion());
+        consulta.setDouble(3, producto.getPrecio());
+        consulta.setInt(4, producto.getProveedor());
+        consulta.executeUpdate();
+    } catch (SQLException ex) {
+        Logger.getLogger(ProductoDao.class.getName()).log(Level.SEVERE, null, ex);
+        throw new RuntimeException("Error al guardar el producto en la base de datos.", ex);
+    } finally {
         try {
-            PreparedStatement consulta = null;
-            try {
-                consulta = conexion.prepareStatement("INSERT INTO producto (nombre, descripcion, precio, proveedor_id)"
-                        + "VALUES(?, ?, ?, ?)");
-            } catch (SQLException ex) {
-                Logger.getLogger(ProductoDao.class.getName()).log(Level.SEVERE, null, ex);
+            if (consulta != null) {
+                consulta.close();
             }
-            consulta.setString(1, producto.getNombre() );
-            consulta.setString(2, producto.getDescripcion());
-            consulta.setDouble(3, producto.getPrecio());
-            consulta.setInt(4, producto.getProveedor());
-            consulta.executeUpdate();
-            
         } catch (SQLException ex) {
             Logger.getLogger(ProductoDao.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
+}
+
     
 }

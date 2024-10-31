@@ -30,7 +30,7 @@ public class Control implements ActionListener{
     private Producto p;
     private Venta v;
     private Formulario form;
-    Conexion conectar = Conexion.getInstance();
+    
 
     public Control(Cliente c, Producto p, Venta v, Formulario form) {
         this.c = c;
@@ -54,79 +54,33 @@ public class Control implements ActionListener{
         this.form.btnMostar.addActionListener(this);
     }
 
-    @Override
+   @Override
     public void actionPerformed(ActionEvent e) {
-        
-        System.out.println("hola estoy imprimiendo");
-        
-        if(e.getActionCommand().contentEquals("Guardar Producto")){
-            System.out.println("hola estoy imprimiendo");
-            
-            // Crear un nuevo objeto producto a partir de los datos del formulario
-             Producto nuevoProducto = new Producto();
-             nuevoProducto.setCodigo(Integer.parseInt(form.txtCodigo.getText()));
-             nuevoProducto.setNombre(form.txtNombre.getText());
-             nuevoProducto.setDescripcion(form.txtDescripcion.getText());
-             nuevoProducto.setPrecio(Double.parseDouble(form.txtPrecio.getText()));
-             nuevoProducto.setProveedor(Integer.parseInt(form.txtProveedor.getText()));
-               /* p.setCodigo(form.txtCodigo.getText());
-                p.setNombre(form.txtNombre.getText());
-                p.setDescripcion(form.txtDescripcion.getText());
-                p.setPrecio(Double.parseDouble(form.txtPrecio.getText()));
-                p.setProveedor(form.txtProveedor.getText());*/
+        if (e.getActionCommand().contentEquals("Guardar Producto")) {
+            try {
+                // Crear un nuevo objeto producto a partir de los datos del formulario
+                Producto nuevoProducto = new Producto();
+                nuevoProducto.setCodigo(Integer.parseInt(form.txtCodigo.getText())); // Asegúrate de que el texto sea un número válido
+                nuevoProducto.setNombre(form.txtNombre.getText());
+                nuevoProducto.setDescripcion(form.txtDescripcion.getText());
+                nuevoProducto.setPrecio(Double.parseDouble(form.txtPrecio.getText())); // Asegúrate de que el texto sea un número válido
+                nuevoProducto.setProveedor(Integer.parseInt(form.txtProveedor.getText())); // Asegúrate de que el texto sea un número válido
 
-             System.out.println(nuevoProducto.toString());
-             
-             ProductoDao productoDao = new ProductoDao();
-             productoDao.guardar(nuevoProducto);
-            
-            } else if (e.getActionCommand().contentEquals("Limpiar")) {
-             form.txtCodigo.setText("");
-             form.txtNombre.setText("");
-             form.txtDescripcion.setText("");
-             form.txtPrecio.setText("");
-             form.txtProveedor.setText("");
-        }
-        
-        
-        if(e.getActionCommand().contentEquals("Mostrar Productos")){
-            
-            System.out.println("Entra a Boton Mostar productos");
-            
-            form.areaProductos.setText("");
-            
-            try{
-            Connection conexion = Conexion.obtener();
-            
-            PreparedStatement seleccionar = conexion.prepareStatement("SELECT * FROM producto");
-            ResultSet consulta = seleccionar.executeQuery(); //Realiza consultas
-            
-            while(consulta.next()){
-                form.areaProductos.append(consulta.getString(1));
-                form.areaProductos.append("    ");
-                form.areaProductos.append(consulta.getString(2));
-                form.areaProductos.append("    ");
-                form.areaProductos.append(consulta.getString(3));
-                form.areaProductos.append("    ");
-                form.areaProductos.append(consulta.getString(4));
-                form.areaProductos.append("    ");
-                form.areaProductos.append("\n");
-            }
-            
-            Conexion.cerrar();
-            
-        }   catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
+                ProductoDao productoDao = new ProductoDao();
+                productoDao.guardar(nuevoProducto);
+                JOptionPane.showMessageDialog(form, "Producto guardado exitosamente!");
+
+                // Limpiar campos después de guardar
+                form.txtCodigo.setText("");
+                form.txtNombre.setText("");
+                form.txtDescripcion.setText("");
+                form.txtPrecio.setText("");
+                form.txtProveedor.setText("");
+            } catch (NumberFormatException nfe) {
+                JOptionPane.showMessageDialog(form, "Por favor, ingrese valores válidos para los números.", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(form, "Error al guardar el producto: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
-    
-    
-    
-    
-        
-    
-    
-            
-    
+    }    
 }
