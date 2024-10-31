@@ -66,8 +66,8 @@ public class Producto {
    
    @Override
    public String toString() {
-    return ("El código del producto es: " + this.getCodigo() + "El nombre del producto es: " + this.getNombre()+ "La descripción del producto es: " 
-            +this.getDescripcion()+ "El precio del producto es: " +this.getPrecio()+"El provvedeor es: "+this.getProveedor());
+    return ("Código: " + this.getCodigo() + " El nombre del producto es: " + this.getNombre()+ " La descripción del producto es: " 
+            +this.getDescripcion()+ " El precio del producto es: " +this.getPrecio()+" El provedeor es: "+this.getProveedor());
   }
     
 }

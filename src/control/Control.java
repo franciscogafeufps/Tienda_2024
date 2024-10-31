@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -52,6 +53,7 @@ public class Control implements ActionListener{
         this.form.btnLimpiarC.addActionListener(this);
         this.form.btnGuardarVenta.addActionListener(this);
         this.form.btnMostar.addActionListener(this);
+        this.form.btnMostrarProductos.addActionListener(this);
     }
 
    @Override
@@ -80,6 +82,31 @@ public class Control implements ActionListener{
                 JOptionPane.showMessageDialog(form, "Por favor, ingrese valores válidos para los números.", "Error", JOptionPane.ERROR_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(form, "Error al guardar el producto: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
+        
+        
+        // Código para mostrar productos
+        if (e.getActionCommand().contentEquals("Mostrar Productos")) {
+            System.out.println("Entra a Boton Mostrar productos");
+
+            form.areaProductos.setText(""); // Limpiar el área de texto antes de mostrar los productos
+
+            ProductoDao productoDao = new ProductoDao();
+            try {
+                // Obtener la lista de productos desde la base de datos
+                List<Producto> productos = productoDao.obtenerTodos(); // Método que deberás implementar
+
+                // Agregar cada producto al área de texto
+                for (Producto producto : productos) {
+                    form.areaProductos.append(producto.toString() + "\n"); // Asegúrate de tener un método toString en Producto
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(form, "Error al mostrar productos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }    
